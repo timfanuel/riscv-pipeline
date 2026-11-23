@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "version": 2,
+    "flow": "Classic"
+  },
+  "DESIGN_NAME": "mul_shift_add",
+  "VERILOG_FILES": ["dir::../../rtl/flow_test/mul_shift_add.sv"],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 10,
+  "FP_CORE_UTIL": 40
+}
