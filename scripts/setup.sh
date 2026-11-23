@@ -46,6 +46,12 @@ chmod +x "$SHIM/vvp" "$SHIM/iverilog"
 fi
 
 # ---- 2. Python venv: cocotb + OpenLane 2 ----
+# Ubuntu splits venv and tkinter (OpenLane imports it) into separate packages.
+if ! python3 -c 'import ensurepip, tkinter' >/dev/null 2>&1; then
+  echo "!! Python is missing venv or tkinter. On Ubuntu/WSL run:"
+  echo "   sudo apt install python3-venv python3-tk"
+  exit 1
+fi
 if [ ! -d "$ROOT/.venv" ]; then
   echo ">> Creating Python venv..."
   python3 -m venv "$ROOT/.venv"
