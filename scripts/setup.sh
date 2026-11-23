@@ -26,6 +26,25 @@ if [ ! -d "$TOOLS/oss-cad-suite" ]; then
   rm "$TOOLS/oss-cad-suite.tgz"
 fi
 
+# ---- 1b. Icarus launchers for cocotb ----
+# OSS CAD Suite's bin/vvp wrapper sets PYTHONHOME to its bundled Python, which
+# clashes with the venv's Python that cocotb is built against. These launchers
+# run the real binaries without that override; env.sh points cocotb at them.
+if [ "$(uname -s)" = Linux ]; then
+SHIM="$TOOLS/icarus-shim"
+OCS="$TOOLS/oss-cad-suite"
+mkdir -p "$SHIM"
+cat > "$SHIM/vvp" <<EOF
+#!/bin/sh
+exec "$OCS/lib/ld-linux-x86-64.so.2" --inhibit-cache --inhibit-rpath "" --library-path "$OCS/lib" "$OCS/libexec/vvp" "\$@"
+EOF
+cat > "$SHIM/iverilog" <<EOF
+#!/bin/sh
+exec "$OCS/bin/iverilog" "\$@"
+EOF
+chmod +x "$SHIM/vvp" "$SHIM/iverilog"
+fi
+
 # ---- 2. Python venv: cocotb + OpenLane 2 ----
 if [ ! -d "$ROOT/.venv" ]; then
   echo ">> Creating Python venv..."
